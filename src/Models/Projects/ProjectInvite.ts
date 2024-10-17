@@ -57,4 +57,6 @@ const ProjectInvites = mongoose.model<ProjectInvite>(
   ProjectInviteSchema,
 );
 
+ProjectInvites.ensureIndexes();
+
 export default ProjectInvites;

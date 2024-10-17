@@ -6,45 +6,38 @@ export interface Project {
   name: string;
   description: string;
   isPublic: boolean; // either can be a personal project, or can share and have leaderboard
-
+  isPublished: boolean; // user can create a project without making it public
   //project goal
   plannedCompletionDate?: Date;
   goalIds?: ObjectId[];
-
   //progress
   completed: boolean;
   status: ProjectStatus;
   startDate: Date;
   endDate?: Date;
-
   //panning
   trainingPlanIds?: ObjectId[];
   milestoneIds?: ObjectId[];
   riskAssessmentIds?: ObjectId[];
-
   //what you need to accomplish project
   //could be great for advertisers/marketing purposes
   gearIds?: ObjectId[];
   // lodgingIds?: ObjectId[];
   expenses?: number;
-
   //progress towarsd project
   climbIds?: ObjectId[];
   trainingIds?: ObjectId[];
-  betaIds?: ObjectId[]; //people who have done the project before
-  noteIds?: ObjectId[]; //notes on the project
-
+  betaIds?: ObjectId[]; //people who have done the project before //still need service
+  noteIds?: ObjectId[]; //notes on the project //still need service
   //contributors
   memberIds?: ObjectId[]; //partners on project
   inviteIds?: ObjectId[]; //people invited to project
-
   //content
   images?: string[];
   videos?: string[];
   links?: string[];
-  discussionComments: ObjectId[]; //may want to copy comment schema for this
+  discussionIds: ObjectId[]; //may want to copy comment schema for this
   tags?: string[];
-
   //meta
   createdBy: ObjectId;
   createdAt: Date;
@@ -62,7 +55,13 @@ const ProjectSchema = new Schema<Project>(
   {
     name: { type: String, required: true, trim: true, index: true },
     description: { type: String, required: true, trim: true },
-    isPublic: { type: Boolean, required: true, index: true },
+    isPublic: { type: Boolean, required: false, index: true, default: false },
+    isPublished: {
+      type: Boolean,
+      required: false,
+      index: true,
+      default: false,
+    },
     plannedCompletionDate: {
       type: Date,
       required: false,
@@ -124,7 +123,7 @@ const ProjectSchema = new Schema<Project>(
     images: { type: [String], required: false, default: [] },
     videos: { type: [String], required: false, default: [] },
     links: { type: [String], required: false, default: [] },
-    discussionComments: {
+    discussionIds: {
       type: [Schema.Types.ObjectId],
       required: false,
       default: [],
@@ -138,5 +137,7 @@ const ProjectSchema = new Schema<Project>(
 ProjectSchema.plugin(mongooseAggregatePaginate);
 
 const Projects = mongoose.model<Project>('Project', ProjectSchema);
+
+Projects.ensureIndexes();
 
 export default Projects;

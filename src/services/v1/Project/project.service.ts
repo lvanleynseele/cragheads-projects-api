@@ -40,10 +40,16 @@ const findAll = async () => {
   return await Projects.find({});
 };
 
-const add = async (project: Project) => {
+const add = async (project: Project, profileId: string | ObjectId) => {
   await Projects.validate(project);
 
-  return await Projects.create(project);
+  const response = await Projects.create(project);
+
+  await profileService.addProject(profileId, response._id);
+
+  await addMember(response._id, profileId);
+
+  return response;
 };
 
 const update = async (id: string | ObjectId, project: Project) => {

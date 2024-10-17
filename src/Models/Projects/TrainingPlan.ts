@@ -51,4 +51,6 @@ const TrainingPlans = mongoose.model<TrainingPlan>(
   TrainingPlanSchema,
 );
 
+TrainingPlans.ensureIndexes();
+
 export default TrainingPlans;

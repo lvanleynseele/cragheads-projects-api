@@ -5,6 +5,8 @@ import trainingPlanRouter from './project.trainingPlan.router';
 import riskAssessmentRouter from './project.riskAssessment.rotuer';
 import milestonesRouter from './project.milestones.router';
 import gearRouter from './project.gear.router';
+import membersRouter from './project.members.router';
+import projectInviteRouter from './project.invites.router';
 
 const projectRouter = express.Router();
 projectRouter.use(express.json());
@@ -14,6 +16,8 @@ projectRouter.use('/training-plans', trainingPlanRouter);
 projectRouter.use('/milestones', milestonesRouter);
 projectRouter.use('/risk-assessments', riskAssessmentRouter);
 projectRouter.use('/gear', gearRouter);
+projectRouter.use('/members', membersRouter);
+projectRouter.use('/invites', projectInviteRouter);
 
 projectRouter.get('/by-profile/:profileId', async (req, res) => {
   try {
@@ -56,11 +60,12 @@ projectRouter.get('/', async (req, res) => {
 projectRouter.post('/:profileId', async (req, res) => {
   try {
     const project = req.body.project;
+    const profileId = req.params.profileId;
     if (!project) {
       res.status(400).send('Climb data is required');
     }
 
-    const result = await projectsService.add(project);
+    const result = await projectsService.add(project, profileId);
     res.status(200).send(result);
   } catch (error) {
     res.status(500).send(error);

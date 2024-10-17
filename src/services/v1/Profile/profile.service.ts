@@ -77,12 +77,39 @@ const removeTraining = async (
   }
 };
 
+const addProject = async (
+  profileId: string | ObjectId,
+  projectId: string | ObjectId,
+) => {
+  try {
+    const response = await Profiles.findByIdAndUpdate(profileId, {
+      $addToSet: { projectIds: projectId },
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+const removeProject = async (
+  profileId: string | ObjectId,
+  projectId: string | ObjectId,
+) => {
+  try {
+    const response = await Profiles.findByIdAndUpdate(profileId, {
+      $pull: { projectIds: projectId } as any,
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
 const profileService = {
   findProfileById,
   addClimb,
   removeClimb,
   addTraining,
   removeTraining,
+  addProject,
 };
 
 export default profileService;
