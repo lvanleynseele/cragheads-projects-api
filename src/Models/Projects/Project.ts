@@ -1,4 +1,5 @@
-import { ObjectId } from 'mongoose';
+import mongoose, { ObjectId, Schema } from 'mongoose';
+import mongooseAggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
 export interface Project {
   _id: ObjectId;
@@ -6,9 +7,9 @@ export interface Project {
   description: string;
   isPublic: boolean; // either can be a personal project, or can share and have leaderboard
 
-  //person project belongs to?
-  //muultiple people can do same project, but this tracks for a specific user
-  ownerId: ObjectId;
+  //project goal
+  plannedCompletionDate?: Date;
+  goalIds?: ObjectId[];
 
   //progress
   completed: boolean;
@@ -16,27 +17,22 @@ export interface Project {
   startDate: Date;
   endDate?: Date;
 
-  //project goal
-  plannedCompletionDate?: Date;
-  areaIds?: ObjectId[];
-  routeIds?: ObjectId[];
-  workoutIds?: ObjectId[];
-
-  //training plan for project
+  //panning
   trainingPlanIds?: ObjectId[];
   milestoneIds?: ObjectId[];
+  riskAssessmentIds?: ObjectId[];
 
   //what you need to accomplish project
   //could be great for advertisers/marketing purposes
   gearIds?: ObjectId[];
-  lodgingIds?: ObjectId[];
+  // lodgingIds?: ObjectId[];
   expenses?: number;
 
   //progress towarsd project
-  climbIds?: string[];
-  trainingIds?: string[];
-  betaIds?: string[]; //people who have done the project before
-  noteIds?: string[]; //notes on the project
+  climbIds?: ObjectId[];
+  trainingIds?: ObjectId[];
+  betaIds?: ObjectId[]; //people who have done the project before
+  noteIds?: ObjectId[]; //notes on the project
 
   //contributors
   memberIds?: ObjectId[]; //partners on project
@@ -46,12 +42,8 @@ export interface Project {
   images?: string[];
   videos?: string[];
   links?: string[];
-  discussion: string[];
+  discussionComments: ObjectId[]; //may want to copy comment schema for this
   tags?: string[];
-  riskAssessment?: {
-    risk: string;
-    mitigationPlan: string;
-  }[];
 
   //meta
   createdBy: ObjectId;
@@ -60,16 +52,91 @@ export interface Project {
 }
 
 export enum ProjectStatus {
-  'Planning',
-  'In Progress',
-  'On Hold',
-  'Completed',
+  PLANING = 'Planning',
+  IN_PROGRESS = 'In Progress',
+  ON_HOLD = 'On Hold',
+  COMPLETED = 'Completed',
 }
 
-//project leaderboards
+const ProjectSchema = new Schema<Project>(
+  {
+    name: { type: String, required: true, trim: true, index: true },
+    description: { type: String, required: true, trim: true },
+    isPublic: { type: Boolean, required: true, index: true },
+    plannedCompletionDate: {
+      type: Date,
+      required: false,
+      default: null,
+      index: true,
+    },
+    goalIds: {
+      type: [Schema.Types.ObjectId],
+      ref: 'Goal',
+      required: false,
+      default: [],
+      index: true,
+    },
+    completed: { type: Boolean, required: false, default: false, index: true },
+    status: {
+      type: String,
+      enum: Object.values(ProjectStatus),
+      required: false,
+      default: ProjectStatus.PLANING,
+      index: true,
+    },
+    startDate: { type: Date, required: false, default: Date.now, index: true },
+    endDate: { type: Date, required: false, default: null },
+    trainingPlanIds: {
+      type: [Schema.Types.ObjectId],
+      ref: 'TrainingPlan',
+      required: false,
+      default: [],
+    },
+    milestoneIds: {
+      type: [Schema.Types.ObjectId],
+      ref: 'Milestone',
+      required: false,
+      default: [],
+    },
+    riskAssessmentIds: {
+      type: [Schema.Types.ObjectId],
+      ref: 'RiskAssessment',
+      required: false,
+      default: [],
+    },
+    gearIds: { type: [Schema.Types.ObjectId], required: false, default: [] },
+    expenses: { type: Number, required: false, default: 0 },
+    climbIds: { type: [Schema.Types.ObjectId], required: false, default: [] },
+    trainingIds: {
+      type: [Schema.Types.ObjectId],
+      required: false,
+      default: [],
+    },
+    betaIds: { type: [Schema.Types.ObjectId], required: false, default: [] },
+    noteIds: { type: [Schema.Types.ObjectId], required: false, default: [] },
+    memberIds: {
+      type: [Schema.Types.ObjectId],
+      ref: 'Profile',
+      required: false,
+      default: [],
+    },
+    inviteIds: { type: [Schema.Types.ObjectId], required: false, default: [] },
+    images: { type: [String], required: false, default: [] },
+    videos: { type: [String], required: false, default: [] },
+    links: { type: [String], required: false, default: [] },
+    discussionComments: {
+      type: [Schema.Types.ObjectId],
+      required: false,
+      default: [],
+    },
+    tags: { type: [String] },
+    createdBy: { type: Schema.Types.ObjectId, required: true },
+  },
+  { timestamps: true },
+);
 
-//project training plans
+ProjectSchema.plugin(mongooseAggregatePaginate);
 
-// open up a project forum for discussion and help on the project
+const Projects = mongoose.model<Project>('Project', ProjectSchema);
 
-//invite people to a project
+export default Projects;

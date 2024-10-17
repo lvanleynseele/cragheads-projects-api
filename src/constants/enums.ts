@@ -144,3 +144,23 @@ export enum LegExerciseTypes {
   GLUTE_BRIDGE = 'GLUTE_BRIDGE',
   HIP_THRUST = 'HIP_THRUST',
 }
+
+export enum TrainingPeriod {
+  DAY = 'Day',
+  WEEK = 'Week',
+  MONTH = 'Month',
+  YEAR = 'Year',
+}
+
+export enum TrainingType {
+  CLIMBING = 'Climbing',
+  WORKOUT = 'Workout',
+}
+
+export enum WorkoutType {
+  ARM = 'Arm',
+  LEG = 'Leg',
+  CAMPUS_BOARD = 'Campus Board',
+  HANGBOARD = 'Hangboard',
+  CARDIO = 'Cardio',
+}

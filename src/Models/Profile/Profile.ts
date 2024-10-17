@@ -18,6 +18,7 @@ export interface Profile {
   climbIds: ObjectId[];
   recordIds: ObjectId[];
   trainingIds: ObjectId[];
+  projectIds: ObjectId[];
   postIds: ObjectId[];
   date: Date;
 }
@@ -90,6 +91,12 @@ export const ProfileSchema = new Schema<Profile>(
       index: true,
     },
     trainingIds: {
+      type: [Schema.Types.ObjectId],
+      required: false,
+      default: [],
+      index: true,
+    },
+    projectIds: {
       type: [Schema.Types.ObjectId],
       required: false,
       default: [],

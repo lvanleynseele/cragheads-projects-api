@@ -2,21 +2,21 @@ import { ObjectId } from 'mongodb';
 import mongoose, { Schema } from 'mongoose';
 import mongooseAggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
-export interface Comment {
+export interface DiscussionComment {
   _id: ObjectId;
-  postId: ObjectId;
+  projectId: ObjectId;
   userId: ObjectId;
   username: string;
   comment: string;
   date: Date;
 }
 
-const CommentSchema = new Schema<Comment>(
+const DiscussionCommentSchema = new Schema<DiscussionComment>(
   {
     _id: Schema.Types.ObjectId,
-    postId: {
+    projectId: {
       type: Schema.Types.ObjectId,
-      ref: 'Post',
+      ref: 'Project',
       index: true,
       required: true,
     },
@@ -33,6 +33,7 @@ const CommentSchema = new Schema<Comment>(
     comment: {
       type: String,
       required: true,
+      trim: true,
     },
     date: { type: Date, default: Date.now },
   },
@@ -41,8 +42,11 @@ const CommentSchema = new Schema<Comment>(
   },
 );
 
-CommentSchema.plugin(mongooseAggregatePaginate);
+DiscussionCommentSchema.plugin(mongooseAggregatePaginate);
 
-const Comments = mongoose.model<Comment>('Comment', CommentSchema);
+const Comments = mongoose.model<DiscussionComment>(
+  'DiscussionComment',
+  DiscussionCommentSchema,
+);
 
 export default Comments;

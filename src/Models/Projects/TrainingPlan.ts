@@ -1,4 +1,6 @@
-import { ObjectId } from 'mongoose';
+import mongoose, { ObjectId, Schema } from 'mongoose';
+import { TrainingType } from '../../constants/enums';
+import mongooseAggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
 export interface TrainingPlan {
   _id: ObjectId;
@@ -11,49 +13,42 @@ export interface TrainingPlan {
   updatedAt: Date;
 }
 
-export interface TrainingPlanClimb {
-  _id: ObjectId;
-  isGymPlan: boolean;
-  numberOfCLimbs: number;
-  period: TrainingPeriod;
-  minDifficulty?: number;
-  maxDifficulty?: number;
-  areaId?: ObjectId;
-  routeIds?: ObjectId[];
-  createdAt: Date;
-  updatedAt: Date;
-}
+const TrainingPlanSchema = new Schema<TrainingPlan>(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    trainingType: {
+      type: String,
+      enum: Object.values(TrainingType),
+      required: true,
+    },
+    climbingPlanIds: {
+      type: Schema.Types.ObjectId,
+      ref: 'ClimbTrainingPlan',
+      required: false,
+    },
+    workoutPlanIds: {
+      type: Schema.Types.ObjectId,
+      ref: 'WorkoutTrainingPlan',
+      required: false,
+    },
+  },
+  {
+    timestamps: true,
+  },
+);
 
-export interface TrainingPlanWorkout {
-  _id: ObjectId;
-  workoutType: WorkoutType;
-  armWorkoutIds?: ObjectId[];
-  legWorkoutIds?: ObjectId[];
-  campusBoardWorkoutIds?: ObjectId[];
-  hangboardWorkoutIds?: ObjectId[];
-  cardioWorkoutIds?: ObjectId[];
-  numberOfWorkouts: number;
-  period: TrainingPeriod;
-  createdAt: Date;
-  updatedAt: Date;
-}
+TrainingPlanSchema.plugin(mongooseAggregatePaginate);
 
-enum TrainingPeriod {
-  'Day',
-  'Week',
-  'Month',
-  'Year',
-}
+const TrainingPlans = mongoose.model<TrainingPlan>(
+  'TrainingPlan',
+  TrainingPlanSchema,
+);
 
-enum TrainingType {
-  'Climbing',
-  'Workout',
-}
-
-enum WorkoutType {
-  ARM = 'Arm',
-  LEG = 'Leg',
-  CAMPUS_BOARD = 'Campus Board',
-  HANGBOARD = 'Hangboard',
-  CARDIO = 'Cardio',
-}
+export default TrainingPlans;
