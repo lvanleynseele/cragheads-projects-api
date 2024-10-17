@@ -24,6 +24,8 @@ export const AreaReviewSchema = new Schema<AreaReview>({
 });
 
 // AreaReviewSchema.index({ areaId: 1, userId: 1 }, { unique: true });
-const AreaReview = mongoose.model<AreaReview>('AreaReview', AreaReviewSchema);
+const AreaReviews = mongoose.model<AreaReview>('AreaReview', AreaReviewSchema);
 
-export default AreaReview;
+AreaReviews.ensureIndexes();
+
+export default AreaReviews;

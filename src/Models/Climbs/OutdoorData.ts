@@ -95,4 +95,6 @@ const OutdoorClimbDatas = mongoose.model<OutdoorClimbData>(
   OutdoorClimbDataSchema,
 );
 
+OutdoorClimbDatas.ensureIndexes();
+
 export default OutdoorClimbDatas;

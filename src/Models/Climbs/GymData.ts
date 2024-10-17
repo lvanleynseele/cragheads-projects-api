@@ -98,4 +98,6 @@ const GymClimbDatas = mongoose.model<GymClimbData>(
   GymClimbDataSchema,
 );
 
+GymClimbDatas.ensureIndexes();
+
 export default GymClimbDatas;

@@ -123,4 +123,6 @@ ProfileSchema.plugin(mongooseAggregatePaginate);
 
 const Profiles = mongoose.model<Profile>('Profile', ProfileSchema);
 
+Profiles.ensureIndexes();
+
 export default Profiles;

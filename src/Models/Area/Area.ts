@@ -113,4 +113,6 @@ AreaSchema.plugin(mongooseAggregatePaginate);
 
 const Areas = mongoose.model<ClimbingArea>('Area', AreaSchema);
 
+Areas.ensureIndexes();
+
 export default Areas;

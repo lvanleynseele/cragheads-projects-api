@@ -70,4 +70,6 @@ const GearSchema = new Schema<Gear>(
 
 const Gears = mongoose.model<Gear>('Gear', GearSchema);
 
+Gears.ensureIndexes();
+
 export default Gears;

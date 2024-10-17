@@ -25,4 +25,7 @@ export const RiskAssessments = mongoose.model<RiskAssessment>(
   'RiskAssesment',
   RiskAssesmentSchema,
 );
+
+RiskAssessments.ensureIndexes();
+
 export default RiskAssessments;

@@ -42,4 +42,6 @@ const MilestoneSchema = new Schema<Milestone>(
 
 const Milestones = mongoose.model<Milestone>('Milestone', MilestoneSchema);
 
+Milestones.ensureIndexes();
+
 export default Milestones;

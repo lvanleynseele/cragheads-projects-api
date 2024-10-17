@@ -57,4 +57,6 @@ GoalSchema.plugin(mongooseAggregatePaginate);
 
 const Goals = mongoose.model<Goal>('Goal', GoalSchema);
 
+Goals.ensureIndexes();
+
 export default Goals;

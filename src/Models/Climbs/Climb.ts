@@ -81,4 +81,6 @@ ClimbSchema.plugin(mongooseAggregatePaginate);
 
 const Climbs = mongoose.model<Climb>('Climb', ClimbSchema);
 
+Climbs.ensureIndexes();
+
 export default Climbs;
