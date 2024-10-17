@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: cragheads-climbs-api
+    restart: always
+    build: .
+    ports:
+      - "3010:3010"
+    environment:
+      - DB_CONN_STRING=mongodb://mongodb:27017/cragheads-db
+      - PORT=3010
+    depends_on:
+      - mongodb
+    volumes:
+      - .:/app
+    networks:
+      - cragheads-climbs-network
+    
+  mongodb:
+    container_name: cragheads-climbs-mongo
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data:/data/db
+    networks:
+      - cragheads-climbs-network
+
+  
+
+networks:
+  cragheads-climbs-network:
+    driver: bridge
