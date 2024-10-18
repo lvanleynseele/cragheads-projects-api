@@ -2,7 +2,6 @@ import logger from '../../utils/logger';
 
 import * as mongoDB from 'mongodb';
 import * as dotenv from 'dotenv';
-import Profiles from '../../Models/Profile/Profile';
 
 export const collections: { [key: string]: mongoDB.Collection } = {};
 

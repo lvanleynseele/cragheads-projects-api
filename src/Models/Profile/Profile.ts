@@ -112,13 +112,6 @@ export const ProfileSchema = new Schema<Profile>(
   { timestamps: true },
 );
 
-// ProfileSchema.index({
-//   username: 'text',
-//   email: 'text',
-//   firstname: 'text',
-//   lastname: 'text',
-// });
-
 ProfileSchema.plugin(mongooseAggregatePaginate);
 
 const Profiles = mongoose.model<Profile>('Profile', ProfileSchema);
