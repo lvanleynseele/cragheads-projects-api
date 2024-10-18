@@ -57,91 +57,9 @@ const findAllClimbs = async (): Promise<Climb[]> => {
   return await Climbs.find({}); //collections.climbs.find({}).toArray();
 };
 
-const addClimb = async (
-  profileId: string | ObjectId,
-  climb: Climb,
-  gymData?: GymClimbData[],
-  outdoorData?: OutdoorClimbData[],
-): Promise<Climb> => {
-  await Climbs.validate(climb);
-
-  if (gymData) {
-    const gymResponse = await Promise.all(
-      gymData.map(async data => {
-        return await gymClimbDataService.add(data);
-      }),
-    );
-
-    climb.gymDataIds = gymResponse.map(data => data._id);
-  }
-
-  if (outdoorData) {
-    const outdoorResponse = await Promise.all(
-      outdoorData.map(async data => {
-        return await outdoorClimbDataService.add(data);
-      }),
-    );
-
-    climb.outdoorDataIds = outdoorResponse.map(data => data._id);
-  }
-
-  const result = await Climbs.create(climb);
-
-  await profileService.addClimb(profileId, result._id);
-
-  return result;
-};
-
-const updateClimb = async (
-  id: string | ObjectId,
-  climb: Climb,
-  gymData?: GymClimbData,
-  outdoorData?: OutdoorClimbData,
-): Promise<Climb | null> => {
-  await Climbs.validate(climb);
-
-  if (gymData) {
-    await gymClimbDataService.update(gymData);
-  }
-
-  if (outdoorData) {
-    await outdoorClimbDataService.update(outdoorData);
-  }
-
-  return await Climbs.findByIdAndUpdate({ _id: id }, { $set: climb });
-};
-
-const deleteClimb = async (
-  id: string | ObjectId,
-  profileId: string | ObjectId,
-): Promise<Climb | null> => {
-  const result = await Climbs.findByIdAndDelete({ _id: id });
-  if (result && result.gymDataIds) {
-    await Promise.all(
-      result.gymDataIds.map(async gymDataId => {
-        await gymClimbDataService.remove(gymDataId);
-      }),
-    );
-  }
-  if (result && result.outdoorDataIds) {
-    await Promise.all(
-      result.outdoorDataIds.map(async outdoorDataId => {
-        await outdoorClimbDataService.remove(outdoorDataId);
-      }),
-    );
-  }
-
-  await profileService.removeClimb(profileId, id);
-
-  return result;
-};
-
 const climbsService = {
   findById,
   findByProfileId,
-  addClimb,
-  updateClimb,
-  deleteClimb,
   findAllClimbs,
 };
 
