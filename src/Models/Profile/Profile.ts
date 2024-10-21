@@ -25,7 +25,6 @@ export interface Profile {
 
 export const ProfileSchema = new Schema<Profile>(
   {
-    // _id: Schema.Types.ObjectId,
     firstName: {
       type: String,
       required: true,

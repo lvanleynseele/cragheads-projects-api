@@ -77,8 +77,6 @@ export const ClimbSchema = new Schema<Climb>(
   },
 );
 
-ClimbSchema.plugin(mongooseAggregatePaginate);
-
 const Climbs = mongoose.model<Climb>('Climb', ClimbSchema);
 
 Climbs.ensureIndexes();
