@@ -4,6 +4,7 @@ import mongooseAggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
 export interface TrainingPlan {
   _id: ObjectId;
+  projectId: ObjectId;
   name: string;
   description: string;
   trainingType: TrainingType;
@@ -15,6 +16,12 @@ export interface TrainingPlan {
 
 const TrainingPlanSchema = new Schema<TrainingPlan>(
   {
+    projectId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Project',
+      required: true,
+      index: true,
+    },
     name: {
       type: String,
       required: true,

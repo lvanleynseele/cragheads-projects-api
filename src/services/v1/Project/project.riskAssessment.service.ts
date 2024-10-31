@@ -13,25 +13,7 @@ const findById = async (
 const findByProjectId = async (
   projectId: string | ObjectId,
 ): Promise<RiskAssessment[]> => {
-  const project = await projectsService.findById(projectId);
-  if (!project) {
-    throw new Error('Project not found');
-  }
-
-  const riskAssessments: RiskAssessment[] = [];
-
-  if (project.riskAssessmentIds) {
-    await Promise.all(
-      project.riskAssessmentIds.map(async riskAssessmentId => {
-        const riskAssessment = await findById(riskAssessmentId);
-        if (riskAssessment) {
-          riskAssessments.push(riskAssessment);
-        }
-      }),
-    );
-  }
-
-  return riskAssessments;
+  return await RiskAssessments.find({ projectId });
 };
 
 const findAll = async (): Promise<RiskAssessment[]> => {

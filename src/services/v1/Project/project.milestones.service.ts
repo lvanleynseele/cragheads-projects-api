@@ -1,7 +1,6 @@
 import { ObjectId } from 'mongoose';
 import Milestones, { Milestone } from '../../../Models/Projects/Milestone';
 import projectsService from './project.service';
-import logger from '../../../utils/logger';
 
 const findById = async (
   milestoneId: string | ObjectId,
@@ -12,26 +11,7 @@ const findById = async (
 const findByProjectId = async (
   projectId: string | ObjectId,
 ): Promise<Milestone[]> => {
-  const project = await projectsService.findById(projectId);
-  if (!project) {
-    throw new Error('Project not found');
-  }
-
-  const milestones: Milestone[] = [];
-  if (project.milestoneIds) {
-    await Promise.all(
-      project.milestoneIds.map(async milestoneId => {
-        const milestone = await findById(milestoneId);
-        if (milestone) {
-          milestones.push(milestone);
-        } else {
-          logger.error(`Milestone with id ${milestoneId} not found`);
-        }
-      }),
-    );
-  }
-
-  return milestones;
+  return await Milestones.find({ projectId });
 };
 
 const findAll = async (): Promise<Milestone[]> => {

@@ -11,27 +11,7 @@ const findById = async (goalId: string | ObjectId): Promise<Goal | null> => {
 const findByProjectId = async (
   projectId: string | ObjectId,
 ): Promise<Goal[]> => {
-  const project = await Projects.findById(projectId);
-  if (!project) {
-    throw new Error('Project not found');
-  }
-
-  const goals: Goal[] = [];
-
-  if (project.goalIds) {
-    await Promise.all(
-      project.goalIds.map(async goalId => {
-        const goal = await findById(goalId);
-        if (goal) {
-          goals.push(goal);
-        } else {
-          logger.error(`Goal with id ${goalId} not found`);
-        }
-      }),
-    );
-  }
-
-  return goals;
+  return await Goals.find({ projectId });
 };
 
 const findAll = async (): Promise<Goal[]> => {

@@ -3,6 +3,7 @@ import { TrainingPeriod, WorkoutType } from '../../constants/enums';
 
 export interface WorkoutTrainingPlan {
   _id: ObjectId;
+  projectId: ObjectId;
   workoutType: WorkoutType;
   armWorkoutIds?: ObjectId[];
   legWorkoutIds?: ObjectId[];

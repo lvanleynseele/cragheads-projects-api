@@ -2,13 +2,13 @@ import mongoose, { ObjectId, Schema } from 'mongoose';
 import mongooseAggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
 export interface ProjectInvite {
-  _id: ObjectId;
+  _id?: ObjectId;
   projectId: ObjectId;
   userId: ObjectId;
   invitedBy: ObjectId;
   status: InviteStatus;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export enum InviteStatus {

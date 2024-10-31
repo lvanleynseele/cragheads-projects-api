@@ -2,17 +2,24 @@ import mongoose, { ObjectId, Schema } from 'mongoose';
 import mongooseAggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
 export interface Milestone {
-  _id: ObjectId;
+  _id?: ObjectId;
+  projectId: ObjectId;
   title: string;
   description?: string;
   dueDate?: Date;
   completed: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 const MilestoneSchema = new Schema<Milestone>(
   {
+    projectId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Project',
+      required: true,
+      index: true,
+    },
     title: {
       type: String,
       required: true,

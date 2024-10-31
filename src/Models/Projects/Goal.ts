@@ -2,13 +2,16 @@ import mongoose, { ObjectId, Schema } from 'mongoose';
 import mongooseAggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
 export interface Goal {
-  _id: ObjectId;
+  _id?: ObjectId;
+  projectId: ObjectId;
   type: GoalTypes;
   title: string;
   description: string;
   areaId?: ObjectId;
   routeIds?: ObjectId[];
   workoutId?: ObjectId;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 enum GoalTypes {
@@ -19,6 +22,12 @@ enum GoalTypes {
 
 const GoalSchema = new Schema<Goal>(
   {
+    projectId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Project',
+      required: true,
+      index: true,
+    },
     type: {
       type: String,
       enum: Object.values(GoalTypes),
